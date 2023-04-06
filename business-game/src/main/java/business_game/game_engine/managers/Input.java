@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import business_game.game_engine.Camera;
+import business_game.game_engine.Scene;
 import business_game.game_engine.utils.Vector2;
 
 public class Input {
@@ -107,7 +108,7 @@ public class Input {
     }
 
     public static Vector2 getMouseWorld() {
-        return Camera.cameraToWorld(mouse);
+        return Scene.getMainCamera().cameraToWorld(mouse);
     }
 
 }

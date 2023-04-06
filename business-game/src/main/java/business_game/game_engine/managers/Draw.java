@@ -1,6 +1,6 @@
 package business_game.game_engine.managers;
 
-import business_game.game_engine.Camera;
+import business_game.game_engine.Scene;
 import business_game.game_engine.Sprite;
 import business_game.game_engine.utils.Vector2;
 
@@ -38,13 +38,13 @@ public class Draw {
         Vector2 position = new Vector2(x, y);
         if (!use_camera)
             return position;
-        return Camera.worldToCamera(position);
+        return Scene.getMainCamera().worldToCamera(position);
     }
 
     public static double transformSize(double size) {
         if (!use_camera)
             return size;
-        return Camera.zoom(size);
+        return Scene.getMainCamera().zoom(size);
     }
 
     public static void fill(Color color) {

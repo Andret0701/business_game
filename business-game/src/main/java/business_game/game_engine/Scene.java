@@ -10,6 +10,23 @@ import business_game.game_engine.utils.Entity;
 import java.util.stream.Collectors;
 
 public class Scene {
+    public static Scene active_scene;
+
+    protected Camera main_camera;
+
+    public Scene(String name) {
+        this.name = name;
+        main_camera = (Camera) create(new Camera(1), 0, 0);
+        if (active_scene == null)
+            active_scene = this;
+    }
+
+    protected String name;
+
+    public String getName() {
+        return name;
+    }
+
     protected HashMap<Entity, Entity> entities = new HashMap<Entity, Entity>();
     protected HashMap<DrawEntity, DrawEntity> drawEntities = new HashMap<DrawEntity, DrawEntity>();
 
@@ -43,7 +60,16 @@ public class Scene {
                 drawEntities.values().stream()
                         .filter(e -> e.visible)
                         .sorted(Comparator.comparingInt(DrawEntity::getLayer)).collect(Collectors.toList()));
+
         return drawEntitiesList;
+    }
+
+    public void setActiveScene() {
+        active_scene = this;
+    }
+
+    public static Camera getMainCamera() {
+        return active_scene.main_camera;
     }
 
 }

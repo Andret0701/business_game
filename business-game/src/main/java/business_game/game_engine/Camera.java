@@ -6,16 +6,12 @@ import business_game.game_engine.managers.Time;
 import business_game.game_engine.utils.Vector2;
 
 public class Camera extends Entity {
-    private static Camera active_camera = null;
     private float zoom;
 
     private Entity target;
 
     public Camera(float zoom) {
         this.zoom = zoom;
-
-        if (active_camera == null)
-            active_camera = this;
     }
 
     @Override
@@ -38,33 +34,25 @@ public class Camera extends Entity {
         this.zoom = zoom;
     }
 
-    public static double zoom(double size) {
-        if (active_camera == null)
-            return size;
-        return active_camera.getZoom() * size;
+    public double zoom(double size) {
+        return zoom * size;
     }
 
-    public static Vector2 cameraToWorld(Vector2 point) {
-        if (active_camera == null)
-            return point.copy();
-
+    public Vector2 cameraToWorld(Vector2 point) {
         Vector2 result = new Vector2(point.x, point.y);
-        result.sub(active_camera.getCenterOffset());
+        result.sub(getCenterOffset());
         result.y *= -1;
-        result.div(active_camera.getZoom());
-        result.add(active_camera.getPosition());
+        result.div(zoom);
+        result.add(position);
         return result;
     }
 
-    public static Vector2 worldToCamera(Vector2 point) {
-        if (active_camera == null)
-            return point.copy();
-
+    public Vector2 worldToCamera(Vector2 point) {
         Vector2 result = new Vector2(point.x, point.y);
-        result.sub(active_camera.getPosition());
-        result.mul(active_camera.getZoom());
+        result.sub(position);
+        result.mul(zoom);
         result.y *= -1;
-        result.add(active_camera.getCenterOffset());
+        result.add(getCenterOffset());
         return result;
     }
 
@@ -75,9 +63,4 @@ public class Camera extends Entity {
     public void setTarget(Entity target) {
         this.target = target;
     }
-
-    public void setActiveCamera() {
-        active_camera = this;
-    }
-
 }

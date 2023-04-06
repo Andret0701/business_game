@@ -60,4 +60,9 @@ public class Vector2 {
     public Vector2 copy() {
         return new Vector2(x, y);
     }
+
+    @Override
+    public String toString() {
+        return "" + x + " ," + y;
+    }
 }

@@ -50,8 +50,11 @@ public class Tilemap extends DrawEntity {
 
     @Override
     public void draw() {
-        for (int x = 0; x < width; x++) {
-            for (int y = 0; y < height; y++) {
+        Vector2Int startIndex = getStartIndex();
+        Vector2Int endIndex = getEndIndex();
+
+        for (int x = startIndex.x; x < endIndex.x; x++) {
+            for (int y = startIndex.y; y < endIndex.y; y++) {
                 Sprite tile = getTile(x, y);
                 if (tile == null)
                     continue;
@@ -59,6 +62,23 @@ public class Tilemap extends DrawEntity {
                 Draw.sprite(tile, position.x, position.y);
             }
         }
+    }
+
+    private Vector2Int getStartIndex() {
+        Vector2 camera_position = Scene.getMainCamera().cameraToWorld(new Vector2(0, Draw.getHeight()));
+        Vector2Int tile_position = worldToTile(camera_position);
+        tile_position.x = Math.max(tile_position.x, 0);
+        tile_position.y = Math.max(tile_position.y, 0);
+        return tile_position;
+    }
+
+    private Vector2Int getEndIndex() {
+        Vector2 camera_position = Scene.getMainCamera().cameraToWorld(new Vector2(Draw.getWidth(), 0));
+        Vector2Int tile_position = worldToTile(camera_position);
+        tile_position.add(new Vector2Int(1, 1));
+        tile_position.x = Math.min(tile_position.x, width);
+        tile_position.y = Math.min(tile_position.y, height);
+        return tile_position;
     }
 
     @Override
@@ -69,10 +89,8 @@ public class Tilemap extends DrawEntity {
     public Vector2 tileToWorld(Vector2Int tile) {
         Vector2 result = tile.toVector2();
         Vector2 middle_offset = new Vector2(width / 2.0, height / 2.0);
-        result.sub(middle_offset);
-
-        Vector2 tile_size = getTileSize();
-        result.mul(tile_size);
+        result.sub(middle_offset); // nice
+        result.mul(getTileSize());
 
         result.add(position);
 
@@ -80,14 +98,13 @@ public class Tilemap extends DrawEntity {
     }
 
     public Vector2Int worldToTile(Vector2 point) {
-        Vector2 middle_offset = new Vector2(width / 2.0, height / 2.0);
-        Vector2 tile_size = getTileSize();
-
         Vector2 result = point.copy();
         result.sub(position);
-        result.div(tile_size);
 
-        result.add(middle_offset);
+        result.div(getTileSize());
+
+        Vector2 middle_offset = new Vector2(width / 2.0, height / 2.0);
+        result.add(middle_offset); // nice
         result = new Vector2(Math.floor(result.x), Math.ceil(result.y));
         return result.toVector2Int();
     }

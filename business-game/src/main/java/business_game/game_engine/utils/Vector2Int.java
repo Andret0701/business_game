@@ -42,4 +42,9 @@ public class Vector2Int {
         return new Vector2Int(x, y);
     }
 
+    @Override
+    public String toString() {
+        return "" + x + ", " + y;
+    }
+
 }

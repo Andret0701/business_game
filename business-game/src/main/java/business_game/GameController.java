@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 /*import game.Entities.Player;*/
 import business_game.game_engine.managers.*;
+import business_game.scenes.GrassLandScene;
 import business_game.game_engine.Camera;
 import javafx.animation.KeyFrame;
 
@@ -16,18 +17,12 @@ public class GameController {
     @FXML
     private Canvas canvas;
     public Scene scene;
-    public Camera main_camera;
 
     int FPS = 60;
 
-    // Player player;
-    Tilemap tilemap;
-
     @FXML // this is called when the fxml file is loaded
     private void initialize() {
-        scene = new Scene();
-
-        main_camera = (Camera) scene.create(new Camera(1), 0, 0);
+        scene = new GrassLandScene();
 
         Input.init(canvas);
         Draw.init(canvas);
@@ -55,8 +50,6 @@ public class GameController {
          * player = new Player(0, 0);
          * main_camera.setTarget(player);
          */
-        tilemap = (Tilemap) scene.create(new Tilemap(200, 200), 0, 0);
-        tilemap.fill(new Sprite("Tiles/grass", 0, 0));
 
     }
 
@@ -76,6 +69,7 @@ public class GameController {
         scene.update();
         scene.draw();
 
+        Camera main_camera = Scene.getMainCamera();
         if (Input.getKey("O"))
             main_camera.setZoom((float) (main_camera.getZoom() + main_camera.getZoom() *
                     Time.delta_time));
