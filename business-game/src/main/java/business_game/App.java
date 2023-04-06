@@ -8,6 +8,8 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
+import business_game.game_engine.utils.*;
+
 /**
  * JavaFX App
  */
@@ -17,7 +19,10 @@ public class App extends Application {
 
     @Override
     public void start(Stage stage) throws IOException {
-        scene = new Scene(loadFXML("primary"), 640, 480);
+        scene = new Scene(loadFXML("App"), 640, 480);
+        stage.setTitle("Fish Ate My Money?!");
+        stage.getIcons().add(Loader.loadImage("Icon"));
+        stage.setResizable(true);
         stage.setScene(scene);
         stage.show();
     }
