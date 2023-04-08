@@ -1,55 +1,44 @@
 package business_game.game_engine;
 
-import business_game.game_engine.utils.Entity;
-import business_game.game_engine.managers.Draw;
-import business_game.game_engine.managers.Time;
 import business_game.game_engine.utils.Vector2;
 
-public class Camera extends Entity {
-    private float zoom;
+public abstract class Camera {
+    public double zoom;
 
-    private Entity target;
+    public Camera(double zoom) {
+        setZoom(zoom);
+    }
 
-    public Camera(float zoom) {
+    public abstract Vector2 getPosition();
+
+    public abstract Vector2 getScreenSize();
+
+    public void setZoom(double zoom) {
+        if (zoom <= 0)
+            throw new IllegalArgumentException("Zoom must be greater than 0");
         this.zoom = zoom;
     }
 
-    @Override
-    public void update() {
-        if (target == null)
-            return;
-        float speed = 2f;
-
-        Vector2 movement = target.getPosition();
-        movement.sub(position);
-        movement.mul(speed * Time.delta_time);
-        position.add(movement);
+    public double zoomWorld(double screen_size) {
+        return zoom * screen_size;
     }
 
-    public float getZoom() {
-        return zoom;
+    public double zoomScreen(double world_size) {
+        return world_size / zoom;
     }
 
-    public void setZoom(float zoom) {
-        this.zoom = zoom;
-    }
-
-    public double zoom(double size) {
-        return zoom * size;
-    }
-
-    public Vector2 cameraToWorld(Vector2 point) {
-        Vector2 result = new Vector2(point.x, point.y);
+    public Vector2 screenToWorld(Vector2 screen_point) {
+        Vector2 result = new Vector2(screen_point.x, screen_point.y);
         result.sub(getCenterOffset());
         result.y *= -1;
         result.div(zoom);
-        result.add(position);
+        result.add(getPosition());
         return result;
     }
 
-    public Vector2 worldToCamera(Vector2 point) {
-        Vector2 result = new Vector2(point.x, point.y);
-        result.sub(position);
+    public Vector2 worldToScreen(Vector2 world_point) {
+        Vector2 result = new Vector2(world_point.x, world_point.y);
+        result.sub(getPosition());
         result.mul(zoom);
         result.y *= -1;
         result.add(getCenterOffset());
@@ -57,10 +46,8 @@ public class Camera extends Entity {
     }
 
     private Vector2 getCenterOffset() {
-        return new Vector2(Draw.getWidth() / 2.0, Draw.getHeight() / 2.0);
+        Vector2 screen_size = getScreenSize();
+        return new Vector2(screen_size.x / 2, screen_size.y / 2);
     }
 
-    public void setTarget(Entity target) {
-        this.target = target;
-    }
 }

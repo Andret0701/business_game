@@ -9,9 +9,9 @@ import java.lang.Math;
 import business_game.game_engine.utils.DrawEntity;
 
 public class Tilemap extends DrawEntity {
-    private Sprite[][] tiles;
-    private int width, height;
-    private Vector2Int num_tile_pixels;
+    protected Sprite[][] tiles;
+    protected int width, height;
+    protected Vector2Int num_tile_pixels;
 
     public Tilemap(int width, int height) {
         this.width = width;
@@ -65,7 +65,7 @@ public class Tilemap extends DrawEntity {
     }
 
     private Vector2Int getStartIndex() {
-        Vector2 camera_position = Scene.getMainCamera().cameraToWorld(new Vector2(0, Draw.getHeight()));
+        Vector2 camera_position = Draw.camera.cameraToWorld(new Vector2(0, Draw.getHeight()));
         Vector2Int tile_position = worldToTile(camera_position);
         tile_position.x = Math.max(tile_position.x, 0);
         tile_position.y = Math.max(tile_position.y, 0);
@@ -73,7 +73,7 @@ public class Tilemap extends DrawEntity {
     }
 
     private Vector2Int getEndIndex() {
-        Vector2 camera_position = Scene.getMainCamera().cameraToWorld(new Vector2(Draw.getWidth(), 0));
+        Vector2 camera_position = Draw.camera.cameraToWorld(new Vector2(Draw.getWidth(), 0));
         Vector2Int tile_position = worldToTile(camera_position);
         tile_position.add(new Vector2Int(1, 1));
         tile_position.x = Math.min(tile_position.x, width);

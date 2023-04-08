@@ -37,11 +37,6 @@ public class App extends Application {
     }
 
     public static void main(String[] args) {
-        // check java version
-        String version = System.getProperty("java.version");
-        System.out.println("Java version: " + version);
-        // test lambda println
-
         launch();
     }
 
