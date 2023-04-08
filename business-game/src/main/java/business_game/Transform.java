@@ -65,17 +65,45 @@ public class Transform {
         return new Vector2(result[0], result[1]);
     }
 
-    public Vector2 localToWorld(Vector2 local) {
+    public Vector2 localToWorldPosition(Vector2 local) {
         Vector2 out = transform(local.copy());
         if (parent == null)
             return out;
-        return parent.localToWorld(out);
+        return parent.localToWorldPosition(out);
     }
 
-    public Vector2 worldToLocal(Vector2 world) {
+    public Vector2 worldToLocalPosition(Vector2 world) {
         Vector2 out = inverseTransform(world.copy());
         if (parent == null)
             return out;
-        return parent.worldToLocal(out);
+        return parent.worldToLocalPosition(out);
+    }
+
+    public double localToWorldScale(double local) {
+        double out = local * scale;
+        if (parent == null)
+            return out;
+        return parent.localToWorldScale(out);
+    }
+
+    public double worldToLocalScale(double world) {
+        double out = world / scale;
+        if (parent == null)
+            return out;
+        return parent.worldToLocalScale(out);
+    }
+
+    public double localToWorldAngle(double local) {
+        double out = local + angle;
+        if (parent == null)
+            return out;
+        return parent.localToWorldAngle(out);
+    }
+
+    public double worldToLocalAngle(double world) {
+        double out = world - angle;
+        if (parent == null)
+            return out;
+        return parent.worldToLocalAngle(out);
     }
 }

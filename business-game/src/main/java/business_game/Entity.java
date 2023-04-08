@@ -1,6 +1,4 @@
-package business_game.game_engine.utils;
-
-import business_game.Vector2;
+package business_game;
 
 public abstract class Entity {
     public Entity() {

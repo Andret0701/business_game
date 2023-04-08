@@ -1,6 +1,6 @@
 package business_game.game_engine.components;
 
-import business_game.game_engine.utils.Entity;
+import business_game.Entity;
 
 public abstract class DrawComponent implements Component {
     protected Entity parent;

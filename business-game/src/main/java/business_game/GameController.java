@@ -12,6 +12,7 @@ import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Vector2;
 import org.dyn4j.geometry.MassType;
 import org.dyn4j.geometry.Rectangle;
+import org.dyn4j.geometry.Transform;
 
 import business_game.Draw;
 import business_game.CameraTest;
@@ -24,10 +25,6 @@ public class GameController {
     private Body body = new Body();
     Rigidbody rigidbody = new Rigidbody();
     private Body floor = new Body();
-
-    Transform transform = new Transform(0, 0, 1, 0);
-    Transform transform2 = new Transform(1, 0, 1.2, 0.1);
-    Transform transform3 = new Transform(1, 0, 1, 0);
 
     int FPS = 60;
     // World<Body> world = new World<Body>();
@@ -46,9 +43,6 @@ public class GameController {
         world.addBody(floor);
         world.addBody(rigidbody.getBody());
 
-        transform3.parent = transform2;
-        transform2.parent = transform;
-
         Draw.init(canvas);
         camera = new CameraTest(0, 0, 10);
         Draw.setCamera(camera);
@@ -56,33 +50,29 @@ public class GameController {
 
     Camera camera;
 
-    private void update() {
-        world.update(1.0 / FPS);
+    float time = 0;
 
+    private void update() {
+        // make canvas scale with window
+        canvas.setWidth(canvas.getParent().getLayoutBounds().getWidth());
+        canvas.setHeight(canvas.getParent().getLayoutBounds().getHeight());
+        world.update(1.0 / FPS);
+        time += 1.0 / FPS;
+        if (time > 3) {
+            time = 0;
+            body.applyForce(new Vector2(0, 20000));
+        }
         CameraTest c = (CameraTest) camera;
         c.setScreenSize(canvas.getWidth(), canvas.getHeight());
 
-        Draw.background(Color.WHITE);
+        // set angle
+        // floor.getTransform().setRotation(Math.sin(time) * 0.5);
+
+        Draw.background(Color.BLACK);
         Draw.fill(Color.BLUE);
-        Draw.circle(transform.localToWorld(new business_game.Vector2(0, 0)).x,
-                transform.localToWorld(new business_game.Vector2(0, 0)).y, 1);
-        Draw.circle(transform2.localToWorld(new business_game.Vector2(0, 0)).x,
-                transform2.localToWorld(new business_game.Vector2(0, 0)).y, 1);
-        Draw.circle(transform3.localToWorld(new business_game.Vector2(0, 0)).x,
-                transform3.localToWorld(new business_game.Vector2(0, 0)).y, 1);
+        Draw.circle(body.getTransform().getTranslationX(), body.getTransform().getTranslationY(), 3);
 
-        transform.angle += 0.01;
-        transform2.angle -= 0.003;
-
-        Draw.fill(Color.RED);
-        // debug
-        System.out.println("transform: " + transform.localToWorld(new business_game.Vector2(0, 0)).x + ", "
-                + transform.localToWorld(new business_game.Vector2(0, 0)).y);
-        System.out.println("transform2: " + transform2.localToWorld(new business_game.Vector2(0, 0)).x + ", "
-                + transform2.localToWorld(new business_game.Vector2(0, 0)).y);
-        System.out.println("transform3: " + transform3.localToWorld(new business_game.Vector2(0, 0)).x + ", "
-                + transform3.localToWorld(new business_game.Vector2(0, 0)).y);
-
+        Draw.rect(floor.getTransform().getTranslationX(), floor.getTransform().getTranslationY(), 100, 1);
     }
 
 }

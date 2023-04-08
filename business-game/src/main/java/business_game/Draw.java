@@ -13,6 +13,9 @@ public class Draw {
 
     public static void init(Canvas canvas) {
         setCanvas(canvas);
+
+        // draw from center
+        canvas.getGraphicsContext2D().setTransform(1, 0, 0, 1, 0, 0);
     }
 
     public static void setCanvas(Canvas canvas) {
@@ -60,13 +63,31 @@ public class Draw {
         width = transformSize(width);
         height = transformSize(height);
 
+        position.sub(new Vector2(width / 2.0, height / 2.0));
+
         canvas.fillRect(position.x, position.y, width, height);
+    }
+
+    public static void rect(Transform transform, double width, double height) {
+        Vector2 position = transformPosition(transform.position.x, transform.position.y);
+        width = transformSize(width);
+        height = transformSize(height);
+
+        position.sub(new Vector2(width / 2.0, height / 2.0));
+
+        canvas.save();
+        canvas.translate(position.x, position.y);
+        canvas.rotate(-Math.toDegrees(transform.angle));
+        canvas.fillRect(0, 0, width, height);
+        canvas.restore();
     }
 
     public static void circle(double x, double y, double radius) {
         Vector2 position = transformPosition(x, y);
         radius = transformSize(radius);
 
+        radius *= 2;
+        position.sub(new Vector2(radius / 2.0, radius / 2.0));
         canvas.fillOval(position.x, position.y, radius, radius);
     }
 

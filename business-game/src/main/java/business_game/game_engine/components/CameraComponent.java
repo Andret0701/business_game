@@ -1,7 +1,7 @@
 package business_game.game_engine.components;
 
-import business_game.game_engine.utils.Entity;
 import business_game.Camera;
+import business_game.Entity;
 import business_game.Vector2;
 import business_game.game_engine.Game;
 

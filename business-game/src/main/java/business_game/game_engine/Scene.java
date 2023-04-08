@@ -5,8 +5,8 @@ import java.util.Vector;
 import java.util.Comparator;
 
 import business_game.Camera;
+import business_game.Entity;
 import business_game.game_engine.utils.DrawEntity;
-import business_game.game_engine.utils.Entity;
 
 import java.util.stream.Collectors;
 
