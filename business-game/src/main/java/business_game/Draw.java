@@ -1,57 +1,61 @@
-package business_game.game_engine.managers;
+package business_game;
 
 import business_game.Camera;
-import business_game.Vector2;
 import business_game.game_engine.Sprite;
+import business_game.Vector2;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-public class DrawManager {
-    private GraphicsContext canvas;
+public class Draw {
+    private static GraphicsContext canvas;
 
-    public DrawManager(Canvas canvas) {
-        this.canvas = canvas.getGraphicsContext2D();
+    public static void init(Canvas canvas) {
+        setCanvas(canvas);
     }
 
-    public double getWidth() {
+    public static void setCanvas(Canvas canvas) {
+        Draw.canvas = canvas.getGraphicsContext2D();
+    }
+
+    public static double getWidth() {
         return canvas.getCanvas().getWidth();
     }
 
-    public double getHeight() {
+    public static double getHeight() {
         return canvas.getCanvas().getHeight();
     }
 
-    private Camera camera;
+    private static Camera camera;
 
-    public void setCamera(Camera camera) {
-        this.camera = camera;
+    public static void setCamera(Camera camera) {
+        Draw.camera = camera;
     }
 
-    public Vector2 transformPosition(double x, double y) {
+    public static Vector2 transformPosition(double x, double y) {
         Vector2 position = new Vector2(x, y);
-        if (camera == null)
+        if (Draw.camera == null)
             return position;
-        return camera.worldToScreen(position);
+        return Draw.camera.worldToScreen(position);
     }
 
-    public double transformSize(double size) {
-        if (camera == null)
+    public static double transformSize(double size) {
+        if (Draw.camera == null)
             return size;
-        return camera.zoomScreen(size);
+        return Draw.camera.zoomScreen(size);
     }
 
-    public void fill(Color color) {
+    public static void fill(Color color) {
         canvas.setFill(color);
     }
 
-    public void background(Color color) {
+    public static void background(Color color) {
         fill(color);
         canvas.fillRect(0, 0, getWidth(), getHeight());
     }
 
-    public void rect(double x, double y, double width, double height) {
+    public static void rect(double x, double y, double width, double height) {
         Vector2 position = transformPosition(x, y);
         width = transformSize(width);
         height = transformSize(height);
@@ -59,32 +63,32 @@ public class DrawManager {
         canvas.fillRect(position.x, position.y, width, height);
     }
 
-    public void circle(double x, double y, double radius) {
+    public static void circle(double x, double y, double radius) {
         Vector2 position = transformPosition(x, y);
         radius = transformSize(radius);
 
         canvas.fillOval(position.x, position.y, radius, radius);
     }
 
-    private double pixel_size = 5;
+    private static double pixel_size = 1;
 
-    public void setPixelSize(double pixel_size) {
-        this.pixel_size = pixel_size;
+    public static void setPixelSize(double pixel_size) {
+        Draw.pixel_size = pixel_size;
     }
 
-    public double getPixelSize() {
+    public static double getPixelSize() {
         return pixel_size;
     }
 
-    public void sprite(Sprite sprite, double x, double y) {
+    public static void sprite(Sprite sprite, double x, double y) {
         sprite(sprite, x, y, false, false);
     }
 
-    public void sprite(Sprite sprite, double x, double y, boolean flip_x) {
+    public static void sprite(Sprite sprite, double x, double y, boolean flip_x) {
         sprite(sprite, x, y, flip_x, false);
     }
 
-    public void sprite(Sprite sprite, double x, double y, boolean flip_x, boolean flip_y) {
+    public static void sprite(Sprite sprite, double x, double y, boolean flip_x, boolean flip_y) {
         int flip_x_int = flip_x ? -1 : 1;
         int flip_y_int = flip_y ? -1 : 1;
 

@@ -1,4 +1,4 @@
-package business_game.game_engine.utils;
+package business_game;
 
 public class Vector2 {
     public double x, y;
@@ -53,9 +53,9 @@ public class Vector2 {
         div(length);
     }
 
-    public Vector2Int toVector2Int() {
-        return new Vector2Int((int) x, (int) y);
-    }
+    // public Vector2Int toVector2Int() {
+    // return new Vector2Int((int) x, (int) y);
+    // }
 
     public Vector2 copy() {
         return new Vector2(x, y);

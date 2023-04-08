@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Vector;
 import java.util.Comparator;
 
+import business_game.Camera;
 import business_game.game_engine.utils.DrawEntity;
 import business_game.game_engine.utils.Entity;
 

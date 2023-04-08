@@ -2,12 +2,12 @@ package business_game.game_engine;
 
 import java.util.HashMap;
 
+import business_game.Vector2;
 import business_game.game_engine.managers.DrawManager;
 
 import business_game.game_engine.managers.GameLoop;
 import business_game.game_engine.managers.Input;
 import business_game.game_engine.managers.Time;
-import business_game.game_engine.utils.Vector2;
 import business_game.game_engine.utils.Vector2Int;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;

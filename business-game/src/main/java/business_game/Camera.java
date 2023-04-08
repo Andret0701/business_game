@@ -1,6 +1,4 @@
-package business_game.game_engine;
-
-import business_game.game_engine.utils.Vector2;
+package business_game;
 
 public abstract class Camera {
     public double zoom;
@@ -13,17 +11,19 @@ public abstract class Camera {
 
     public abstract Vector2 getScreenSize();
 
+    public abstract double getRotation();
+
     public void setZoom(double zoom) {
         if (zoom <= 0)
             throw new IllegalArgumentException("Zoom must be greater than 0");
         this.zoom = zoom;
     }
 
-    public double zoomWorld(double screen_size) {
+    public double zoomScreen(double screen_size) {
         return zoom * screen_size;
     }
 
-    public double zoomScreen(double world_size) {
+    public double zoomWorld(double world_size) {
         return world_size / zoom;
     }
 
@@ -42,6 +42,7 @@ public abstract class Camera {
         result.mul(zoom);
         result.y *= -1;
         result.add(getCenterOffset());
+        System.out.println(result);
         return result;
     }
 

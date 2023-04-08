@@ -1,9 +1,8 @@
 package business_game.game_engine.components;
 
 import business_game.game_engine.utils.Entity;
-import business_game.game_engine.utils.Vector2;
-
-import business_game.game_engine.Camera;
+import business_game.Camera;
+import business_game.Vector2;
 import business_game.game_engine.Game;
 
 public class CameraComponent extends Camera implements Component {

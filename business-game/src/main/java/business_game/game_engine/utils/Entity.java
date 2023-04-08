@@ -1,5 +1,7 @@
 package business_game.game_engine.utils;
 
+import business_game.Vector2;
+
 public abstract class Entity {
     public Entity() {
 

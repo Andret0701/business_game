@@ -7,7 +7,7 @@ import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import business_game.game_engine.utils.Vector2;
+import business_game.Vector2;
 
 public class Input {
 
