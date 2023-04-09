@@ -1,10 +1,10 @@
 package business_game;
 
 public class Transform {
-    public Vector2 position;
-    public double scale;
-    public double angle;
-    public Transform parent;
+    private Vector2 position;
+    private double scale;
+    private double angle;
+    private Transform parent;
 
     public Transform()
 
@@ -16,6 +16,62 @@ public class Transform {
         this.position = new Vector2(x, y);
         this.scale = scale;
         this.angle = angle;
+    }
+
+    public Vector2 getPosition() {
+        return localToWorldPosition(new Vector2(0, 0));
+    }
+
+    public Vector2 getLocalPositon() {
+        return position;
+    }
+
+    public void setPosition(Vector2 position) {
+        this.position = transform(worldToLocalPosition(position));
+    }
+
+    public void setLocalPosition(Vector2 position) {
+        this.position = position;
+    }
+
+    public double getScale() {
+        return localToWorldScale(1);
+    }
+
+    public double getLocalScale() {
+        return scale;
+    }
+
+    public void setScale(double scale) {
+        this.scale = worldToLocalScale(scale) * this.scale;
+    }
+
+    public void setLocalScale(double scale) {
+        this.scale = scale;
+    }
+
+    public double getAngle() {
+        return localToWorldAngle(0);
+    }
+
+    public double getLocalAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = worldToLocalAngle(angle) + this.angle;
+    }
+
+    public void setLocalAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public Transform getParent() {
+        return parent;
+    }
+
+    public void setParent(Transform parent) {
+        this.parent = parent;
     }
 
     private double[] matrix33vector3(double[][] matrix, double[] vector) {
@@ -67,16 +123,16 @@ public class Transform {
 
     public Vector2 localToWorldPosition(Vector2 local) {
         Vector2 out = transform(local.copy());
-        if (parent == null)
-            return out;
-        return parent.localToWorldPosition(out);
+        if (parent != null)
+            out = parent.localToWorldPosition(out);
+        return out;
     }
 
     public Vector2 worldToLocalPosition(Vector2 world) {
-        Vector2 out = inverseTransform(world.copy());
-        if (parent == null)
-            return out;
-        return parent.worldToLocalPosition(out);
+        Vector2 out = world.copy();
+        if (parent != null)
+            out = parent.worldToLocalPosition(out);
+        return inverseTransform(out);
     }
 
     public double localToWorldScale(double local) {
@@ -106,4 +162,11 @@ public class Transform {
             return out;
         return parent.worldToLocalAngle(out);
     }
+
+    public Transform copy() {
+        Transform transform = new Transform(position.x, position.y, scale, angle);
+        transform.parent = parent;
+        return transform;
+    }
+
 }

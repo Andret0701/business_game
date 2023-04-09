@@ -1,8 +1,6 @@
 package business_game;
 
-import business_game.Camera;
 import business_game.game_engine.Sprite;
-import business_game.Vector2;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -30,23 +28,11 @@ public class Draw {
         return canvas.getCanvas().getHeight();
     }
 
-    private static Camera camera;
-
-    public static void setCamera(Camera camera) {
-        Draw.camera = camera;
-    }
-
     public static Vector2 transformPosition(double x, double y) {
         Vector2 position = new Vector2(x, y);
-        if (Draw.camera == null)
-            return position;
-        return Draw.camera.worldToScreen(position);
-    }
-
-    public static double transformSize(double size) {
-        if (Draw.camera == null)
-            return size;
-        return Draw.camera.zoomScreen(size);
+        position.y = -position.y;
+        position.add(new Vector2(getWidth() / 2.0, getHeight() / 2.0));
+        return position;
     }
 
     public static void fill(Color color) {
@@ -60,31 +46,31 @@ public class Draw {
 
     public static void rect(double x, double y, double width, double height) {
         Vector2 position = transformPosition(x, y);
-        width = transformSize(width);
-        height = transformSize(height);
 
         position.sub(new Vector2(width / 2.0, height / 2.0));
 
         canvas.fillRect(position.x, position.y, width, height);
     }
 
-    public static void rect(Transform transform, double width, double height) {
-        Vector2 position = transformPosition(transform.position.x, transform.position.y);
-        width = transformSize(width);
-        height = transformSize(height);
-
-        position.sub(new Vector2(width / 2.0, height / 2.0));
-
-        canvas.save();
-        canvas.translate(position.x, position.y);
-        canvas.rotate(-Math.toDegrees(transform.angle));
-        canvas.fillRect(0, 0, width, height);
-        canvas.restore();
-    }
+    /*
+     * public static void rect(Transform transform, double width, double height) {
+     * Vector2 position = transformPosition(transform.position.x,
+     * transform.position.y);
+     * width = transformSize(width);
+     * height = transformSize(height);
+     * 
+     * position.sub(new Vector2(width / 2.0, height / 2.0));
+     * 
+     * canvas.save();
+     * canvas.translate(position.x, position.y);
+     * canvas.rotate(-Math.toDegrees(transform.angle));
+     * canvas.fillRect(0, 0, width, height);
+     * canvas.restore();
+     * }
+     */
 
     public static void circle(double x, double y, double radius) {
         Vector2 position = transformPosition(x, y);
-        radius = transformSize(radius);
 
         radius *= 2;
         position.sub(new Vector2(radius / 2.0, radius / 2.0));
@@ -120,8 +106,8 @@ public class Draw {
 
         Image image = sprite.getImage();
 
-        double width = transformSize(pixel_size * image.getWidth() * flip_x_int);
-        double height = transformSize(pixel_size * image.getHeight() * flip_y_int);
+        double width = pixel_size * image.getWidth() * flip_x_int;
+        double height = pixel_size * image.getHeight() * flip_y_int;
 
         canvas.setImageSmoothing(false);
         canvas.drawImage(image, position.x, position.y, width, height);

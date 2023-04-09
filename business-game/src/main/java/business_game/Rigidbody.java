@@ -3,9 +3,6 @@ package business_game;
 import org.dyn4j.dynamics.Body;
 import org.dyn4j.geometry.Mass;
 import org.dyn4j.geometry.MassType;
-import org.dyn4j.world.World;
-
-import business_game.Vector2;
 
 public class Rigidbody {
     private Body body;
@@ -14,16 +11,45 @@ public class Rigidbody {
 
     private boolean can_rotate = true;
 
-    public Rigidbody() {
-        body = new Body();
+    private Transform transform;
+
+    public Rigidbody(Transform transform) {
+        this.body = new Body();
+        this.transform = transform;
+
         setStatic(is_static);
-        setMass(mass);
-        setCanRotate(can_rotate);
+        // setMass(mass);
+        // setCanRotate(can_rotate);
+    }
+
+    public void syncBody() {
+        org.dyn4j.geometry.Transform body_transform = body.getTransform();
+        Vector2 position = transform.getPosition();
+        double angle = transform.getAngle();
+        double scale = transform.getScale();
+
+        body_transform.setTranslation(position.x, position.y);
+        body_transform.setRotation(angle);
+
+        // fix scale - dyn4j doesn't support it
+    }
+
+    public void syncTransform() {
+        org.dyn4j.geometry.Transform body_transform = body.getTransform();
+        org.dyn4j.geometry.Vector2 position = body_transform.getTranslation();
+        double angle = body_transform.getRotationAngle();
+        // double scale = transform.getScale();
+
+        transform.setPosition(new Vector2(position.x, position.y));
+        transform.setAngle(angle);
+
+        // fix scale - dyn4j doesn't support it
     }
 
     public void setStatic(boolean is_static) {
         this.is_static = is_static;
         body.setMass(is_static ? MassType.INFINITE : MassType.NORMAL);
+        body.setMass(MassType.NORMAL);
     }
 
     public void setMass(double mass) {
@@ -35,15 +61,6 @@ public class Rigidbody {
     public void setCanRotate(boolean can_rotate) {
         this.can_rotate = can_rotate;
         body.setMass(can_rotate ? MassType.NORMAL : MassType.FIXED_ANGULAR_VELOCITY);
-    }
-
-    public void setPosition(Vector2 position) {
-        body.translate(position.x, position.y);
-    }
-
-    public Vector2 getPosition() {
-        org.dyn4j.geometry.Vector2 position = body.getTransform().getTranslation();
-        return new Vector2(position.x, position.y);
     }
 
     public void setVelocity(Vector2 velocity) {
