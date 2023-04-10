@@ -7,7 +7,7 @@ public class TestEntity extends Entity implements Interactable, Drawable {
 
     public TestEntity() {
         super();
-        rigidbody = new Rigidbody(this.transform);
+        rigidbody = new Rigidbody(this);
         rigidbody.addCollider(new CircleCollider(5, 0, 0));
     }
 
@@ -33,9 +33,15 @@ public class TestEntity extends Entity implements Interactable, Drawable {
     }
 
     @Override
-    public Entity copy() {
-        TestEntity testEntity = new TestEntity();
-        testEntity.transform.setTransform(this.transform);
-        return testEntity;
+    public void onCollision(Interactable other) {
+        System.out.println(other.getRigidbody());
     }
+
+    @Override
+    public Entity copy() {
+        TestEntity entity = new TestEntity();
+        entity.transform.setTransform(transform);
+        return entity;
+    }
+
 }

@@ -2,7 +2,15 @@ package business_game;
 
 public class Camera extends Entity {
     public Camera(double zoom) {
-        transform.setScale(zoom);
+        setZoom(zoom);
+    }
+
+    public void setZoom(double zoom) {
+        transform.setScale(1 / zoom);
+    }
+
+    public double getZoom() {
+        return 1 / transform.getScale();
     }
 
     public double zoomScreen(double screen_size) {
@@ -31,8 +39,9 @@ public class Camera extends Entity {
 
     @Override
     public Entity copy() {
-        Camera camera = new Camera(0);
-        camera.transform = transform.copy();
+        Camera camera = new Camera(getZoom());
+        camera.transform.setTransform(transform);
+        camera.setZoom(getZoom());
         return camera;
     }
 }

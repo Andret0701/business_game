@@ -1,7 +1,10 @@
 package business_game;
 
 import org.dyn4j.dynamics.Body;
+import org.dyn4j.world.ManifoldCollisionData;
 import org.dyn4j.world.World;
+
+import org.dyn4j.world.listener.CollisionListenerAdapter;
 import org.dyn4j.geometry.Circle;
 import org.dyn4j.geometry.Convex;
 import org.dyn4j.geometry.Mass;
@@ -11,13 +14,36 @@ import org.dyn4j.geometry.Rectangle;
 import java.util.HashMap;
 import java.util.List;
 
+import org.dyn4j.dynamics.BodyFixture;
+
 public class PhysicsWorld implements Updateable {
     private World<Body> world = new World<Body>();
 
+    private class Collision extends CollisionListenerAdapter<Body, BodyFixture> {
+        @Override
+        public boolean collision(ManifoldCollisionData<Body, BodyFixture> collisionData) {
+            Rigidbody r1 = (Rigidbody) collisionData.getBody1().getUserData();
+            Rigidbody r2 = (Rigidbody) collisionData.getBody2().getUserData();
+
+            Interactable i1 = r1.interactable;
+            Interactable i2 = r2.interactable;
+            // Manifold manifold = collisionData.getManifold();
+            // Vector2 normal = new Vector2(manifold.getNormal().x, manifold.getNormal().y);
+            // Vector2 point = new Vector2(manifold.get().x, manifold.getPoint().y);
+
+            if (i1 != null && i2 != null) {
+                i1.onCollision(i2);
+                i2.onCollision(i1);
+            }
+            return true;
+        }
+    }
+
+    private Collision collision = new Collision();
     Vector2 gravity = new Vector2(0, -9.81);
 
     public PhysicsWorld() {
-
+        world.addCollisionListener(collision);
     }
 
     @Override
@@ -55,6 +81,8 @@ public class PhysicsWorld implements Updateable {
             Convex convex = createConvex(collider);
             body.addFixture(convex);
         }
+
+        body.setUserData(rigidbody);
         return body;
     }
 
@@ -82,16 +110,18 @@ public class PhysicsWorld implements Updateable {
         Vector2 velocity = new Vector2(body.getLinearVelocity().x, body.getLinearVelocity().y);
         double angular_velocity = body.getAngularVelocity();
 
-        rigidbody.transform.setPosition(position);
-        rigidbody.transform.setAngle(angle);
+        Transform rigidbody_transform = rigidbody.interactable.getTransform();
+        rigidbody_transform.setPosition(position);
+        rigidbody_transform.setAngle(angle);
 
         rigidbody.setVelocity(velocity);
         rigidbody.setAngularVelocity(angular_velocity);
     }
 
     private void syncBody(Rigidbody rigidbody, Body body) {
-        Vector2 position = rigidbody.transform.getPosition();
-        double angle = rigidbody.transform.getAngle();
+        Transform rigidbody_transform = rigidbody.interactable.getTransform();
+        Vector2 position = rigidbody_transform.getPosition();
+        double angle = rigidbody_transform.getAngle();
 
         Vector2 velocity = rigidbody.getVelocity();
         double angular_velocity = rigidbody.getAngularVelocity();

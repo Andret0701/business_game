@@ -1,13 +1,22 @@
 package business_game;
 
 public abstract class Entity implements Updateable {
-    public Transform transform = new Transform();
+    protected Transform transform;
 
     public Entity() {
+        this.transform = new Transform(0, 0, 1, 0);
     }
 
-    public Entity(double x, double y) {
-        transform.setPosition(new Vector2(x, y));
+    public Transform getTransform() {
+        return transform;
+    }
+
+    public abstract Entity copy();
+
+    public Entity copy(double x, double y) {
+        Entity entity = this.copy();
+        entity.getTransform().setPosition(new Vector2(x, y));
+        return entity;
     }
 
     @Override
@@ -15,13 +24,8 @@ public abstract class Entity implements Updateable {
 
     }
 
-    public Entity copy() {
-        return this;
-    }
-
-    public Entity copy(double x, double y) {
-        Entity entity = copy();
-        entity.transform.setPosition(new Vector2(x, y));
-        return entity;
+    @Override
+    public String toString() {
+        return "Entity { " + transform + " }";
     }
 }

@@ -8,7 +8,6 @@ import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Polygon;
 
 public class Draw {
     private static GraphicsContext canvas;
@@ -19,9 +18,16 @@ public class Draw {
         // draw from center
         canvas.getGraphicsContext2D().setTransform(1, 0, 0, 1, 0, 0);
 
-        // move canvas to center
-        Draw.canvas.translate(canvas.getWidth() / 2, canvas.getHeight() / 2);
+    }
+
+    private static void translateCanvas(double x, double y, double offset_x, double offset_y, double angle) {
+        Draw.canvas.save();
+        Draw.canvas.translate(getWidth() / 2, getHeight() / 2);
         Draw.canvas.scale(1, -1);
+
+        Draw.canvas.translate(x, y);
+        Draw.canvas.rotate(Math.toDegrees(angle));
+        Draw.canvas.translate(offset_x, offset_y);
     }
 
     public static void setCanvas(Canvas canvas) {
@@ -42,7 +48,7 @@ public class Draw {
 
     public static void background(Color color) {
         fill(color);
-        canvas.fillRect(-getWidth() / 2, -getHeight() / 2, getWidth(), getHeight());
+        canvas.fillRect(0, 0, getWidth(), getHeight());
     }
 
     public static void rect(double x, double y, double width, double height) {
@@ -54,18 +60,23 @@ public class Draw {
     }
 
     public static void rect(double x, double y, double angle, double width, double height) {
-        Vector2 top_left = new Vector2(-width / 2, -height / 2);
-        Vector2 top_right = new Vector2(width / 2, -height / 2);
-        Vector2 bottom_right = new Vector2(width / 2, height / 2);
-        Vector2 bottom_left = new Vector2(-width / 2, height / 2);
-        polygon(new ArrayList<Vector2>() {
-            {
-                add(top_left);
-                add(top_right);
-                add(bottom_right);
-                add(bottom_left);
-            }
-        }, x, y, angle, 1);
+        translateCanvas(x, y, -width / 2, -height / 2, angle);
+        canvas.fillRect(0, 0, width, height);
+        Draw.canvas.restore();
+        /*
+         * Vector2 top_left = new Vector2(-width / 2, -height / 2);
+         * Vector2 top_right = new Vector2(width / 2, -height / 2);
+         * Vector2 bottom_right = new Vector2(width / 2, height / 2);
+         * Vector2 bottom_left = new Vector2(-width / 2, height / 2);
+         * polygon(new ArrayList<Vector2>() {
+         * {
+         * add(top_left);
+         * add(top_right);
+         * add(bottom_right);
+         * add(bottom_left);
+         * }
+         * }, x, y, angle, 1);
+         */
     }
 
     public static void polygon(List<Vector2> points, double x, double y, double angle, double scale) {
@@ -74,39 +85,24 @@ public class Draw {
 
         for (int i = 0; i < points.size(); i++) {
             Vector2 point = points.get(i);
-            point.rotate(angle);
             point.mul(scale);
-            point.add(new Vector2(x, y));
             pointsX[i] = point.x;
             pointsY[i] = point.y;
         }
 
+        translateCanvas(x, y, 0, 0, angle);
         canvas.fillPolygon(pointsX, pointsY, points.size());
+        Draw.canvas.restore();
     }
-
-    /*
-     * public static void rect(Transform transform, double width, double height) {
-     * Vector2 position = transformPosition(transform.position.x,
-     * transform.position.y);
-     * width = transformSize(width);
-     * height = transformSize(height);
-     * 
-     * position.sub(new Vector2(width / 2.0, height / 2.0));
-     * 
-     * canvas.save();
-     * canvas.translate(position.x, position.y);
-     * canvas.rotate(-Math.toDegrees(transform.angle));
-     * canvas.fillRect(0, 0, width, height);
-     * canvas.restore();
-     * }
-     */
 
     public static void circle(double x, double y, double radius) {
         Vector2 position = new Vector2(x, y);
 
         radius *= 2;
-        position.sub(new Vector2(radius / 2.0, radius / 2.0));
-        canvas.fillOval(position.x, position.y, radius, radius);
+
+        translateCanvas(x, y, -radius / 2, -radius / 2, 0);
+        canvas.fillOval(0, 0, radius, radius);
+        Draw.canvas.restore();
     }
 
     private static double pixel_size = 5;
@@ -145,10 +141,7 @@ public class Draw {
         double width = pixel_size * image.getWidth() * flip_x_int;
         double height = pixel_size * image.getHeight() * flip_y_int;
 
-        canvas.save();
-        canvas.translate(position.x, position.y);
-        canvas.rotate(Math.toDegrees(angle));
-        canvas.translate(offset_x, offset_y);
+        translateCanvas(position.x, position.y, offset_x, offset_y, angle);
         canvas.setImageSmoothing(false);
         canvas.drawImage(image, 0, 0, width, height);
         canvas.restore();

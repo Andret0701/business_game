@@ -25,7 +25,9 @@ public class Transform {
     }
 
     public void setPosition(Vector2 position) {
-        this.position = transform(worldToLocalPosition(position));
+        if (parent != null)
+            position = parent.worldToLocalPosition(position);
+        this.position = position;
     }
 
     public void setLocalPosition(Vector2 position) {
@@ -41,7 +43,9 @@ public class Transform {
     }
 
     public void setScale(double scale) {
-        this.scale = worldToLocalScale(scale) * this.scale;
+        if (parent != null)
+            scale = parent.worldToLocalScale(scale);
+        this.scale = scale;
     }
 
     public void setLocalScale(double scale) {
@@ -57,7 +61,9 @@ public class Transform {
     }
 
     public void setAngle(double angle) {
-        this.angle = worldToLocalAngle(angle) + this.angle;
+        if (parent != null)
+            angle = parent.worldToLocalAngle(angle);
+        this.angle = angle;
     }
 
     public void setLocalAngle(double angle) {
@@ -172,6 +178,11 @@ public class Transform {
         Transform transform = new Transform(position.x, position.y, scale, angle);
         transform.parent = parent;
         return transform;
+    }
+
+    @Override
+    public String toString() {
+        return "position = " + position + ", scale = " + scale + ", angle = " + angle;
     }
 
 }

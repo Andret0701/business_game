@@ -7,12 +7,13 @@ public class Rigidbody {
     private boolean is_static = false;
     private double mass = 1.0;
     private boolean can_rotate = true;
-    public Transform transform;
     private Vector2 velocity = new Vector2(0, 0);
     private double angular_velocity = 0;
 
-    public Rigidbody(Transform transform) {
-        this.transform = transform;
+    public Interactable interactable;
+
+    public Rigidbody(Interactable interactable) {
+        this.interactable = interactable;
     }
 
     public void setStatic(boolean is_static) {
@@ -71,5 +72,11 @@ public class Rigidbody {
 
     public List<Collider> getColliders() {
         return colliders;
+    }
+
+    @Override
+    public String toString() {
+        return "Rigidbody { " + "is_static = " + is_static + ", mass = " + mass + ", can_rotate = " + can_rotate
+                + ", velocity = " + velocity + ", angular_velocity = " + angular_velocity + " }";
     }
 }

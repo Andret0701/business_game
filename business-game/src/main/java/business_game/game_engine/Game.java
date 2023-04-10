@@ -12,6 +12,7 @@ import javafx.scene.paint.Color;
 import business_game.Entity;
 import business_game.Interactable;
 import business_game.PhysicsWorld;
+import business_game.Transform;
 import business_game.Drawable;
 
 import java.util.ArrayList;
@@ -75,9 +76,10 @@ public class Game implements Updateable {
 
             Entity entity = (Entity) drawable; // this is bad - fix later
 
-            Vector2 position = entity.transform.getPosition();
-            double scale = entity.transform.getScale();
-            double angle = entity.transform.getAngle();
+            Transform transform = entity.getTransform();
+            Vector2 position = transform.getPosition();
+            double scale = transform.getScale();
+            double angle = transform.getAngle();
 
             position = main_camera.worldToScreen(position);
             scale = main_camera.zoomScreen(scale);
@@ -101,7 +103,7 @@ public class Game implements Updateable {
             throw new IllegalArgumentException("Scene " + scene_name + " does not exist");
         destroyAll();
         for (Entity entity : scenes.get(scene_name)) {
-            Vector2 position = entity.transform.getPosition();
+            Vector2 position = entity.getTransform().getPosition();
             create(entity, position.x, position.y);
         }
     }
@@ -153,7 +155,7 @@ public class Game implements Updateable {
     // #endregion
 
     // #region CAMERA MANAGER
-    protected Camera main_camera = new Camera(0.1);
+    protected Camera main_camera = new Camera(10);
 
     public Camera getMainCamera() {
         return main_camera;
