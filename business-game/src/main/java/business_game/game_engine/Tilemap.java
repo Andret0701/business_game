@@ -1,8 +1,8 @@
 package business_game.game_engine;
 
-import business_game.game_engine.utils.Vector2Int;
 import business_game.Vector2;
-import business_game.game_engine.managers.Draw;
+import business_game.Vector2Int;
+import business_game.Draw;
 
 import java.lang.Math;
 

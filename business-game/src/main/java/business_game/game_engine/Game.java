@@ -1,31 +1,26 @@
 package business_game.game_engine;
 
 import java.util.HashMap;
-
-import org.dyn4j.world.World;
+import java.util.List;
 
 import business_game.Updateable;
 import business_game.Vector2;
-import business_game.game_engine.managers.DrawManager;
-
+import business_game.Vector2Int;
 import business_game.game_engine.managers.GameLoop;
-import business_game.game_engine.managers.Input;
-import business_game.game_engine.managers.Time;
-import business_game.game_engine.utils.Vector2Int;
-import javafx.scene.canvas.Canvas;
 import javafx.scene.paint.Color;
 
 import business_game.Entity;
 import business_game.Interactable;
+import business_game.PhysicsWorld;
 import business_game.Drawable;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Comparator;
 
 import business_game.Camera;
 import business_game.Draw;
 
-import org.dyn4j.dynamics.Body;
+import java.util.Collections;
 
 public class Game implements Updateable {
     public static Game instance;
@@ -42,34 +37,22 @@ public class Game implements Updateable {
     // #endregion
 
     public final GameLoop game_loop;
-    private World<Body> physics_world;
-    private Camera main_camera;
+    private PhysicsWorld physics_world;
 
     public Game() {
         game_loop = new GameLoop(FPS, this);
-        physics_world = new World<Body>();
+        physics_world = new PhysicsWorld();
     }
 
+    // #region UPDATE MANAGER
     @Override
     public void update(double delta_time) {
-        // fix this later - make canvas scale with window
-        // canvas.widthProperty().bind(canvas.getScene().widthProperty());
-        // canvas.heightProperty().bind(canvas.getScene().heightProperty());
-        // canvas.requestFocus();
-
         setActive();
-
         Draw.background(Color.BLACK);
-    }
-
-    public void updateInteractables(double delta_time) {
-        for (Interactable interactable : interactableEntities)
-            interactable.getRigidbody().syncBody();
 
         physics_world.update(delta_time);
-
-        for (Interactable interactable : interactableEntities)
-            interactable.getRigidbody().syncTransform();
+        updateEntities(delta_time);
+        updateDrawables();
     }
 
     public void updateEntities(double delta_time) {
@@ -77,8 +60,19 @@ public class Game implements Updateable {
             entity.update(delta_time);
     }
 
+    Comparator<Drawable> drawableComparator = new Comparator<Drawable>() {
+        @Override
+        public int compare(Drawable d1, Drawable d2) {
+            return Double.compare(d1.getLayer(), d2.getLayer());
+        }
+    };
+
     public void updateDrawables() {
+        Collections.sort(drawEntities, drawableComparator);
         for (Drawable drawable : drawEntities) {
+            if (!drawable.isVisable())
+                continue;
+
             Entity entity = (Entity) drawable; // this is bad - fix later
 
             Vector2 position = entity.transform.getPosition();
@@ -92,6 +86,8 @@ public class Game implements Updateable {
             drawable.draw(position.x, position.y, angle, scale);
         }
     }
+
+    // #endregion
 
     // #region SCENE MANAGER
     protected HashMap<String, Scene> scenes = new HashMap<String, Scene>();
@@ -112,9 +108,9 @@ public class Game implements Updateable {
     // #endregion
 
     // #region ENTITY MANAGER
-    private Collection<Entity> entities = new ArrayList<>();
-    private Collection<Drawable> drawEntities = new ArrayList<>();
-    private Collection<Interactable> interactableEntities = new ArrayList<>();
+    private List<Entity> entities = new ArrayList<>();
+    private List<Drawable> drawEntities = new ArrayList<>();
+    private List<Interactable> interactableEntities = new ArrayList<>();
 
     public Entity create(Entity entity, double x, double y) {
         entity = entity.copy(x, y);
@@ -147,12 +143,24 @@ public class Game implements Updateable {
 
     private void createInteractable(Interactable interactable) {
         interactableEntities.add(interactable);
-        physics_world.addBody(interactable.getRigidbody().getBody());
+        physics_world.addRigidbody(interactable.getRigidbody());
     }
 
     private void destroyInteractable(Interactable interactable) {
         interactableEntities.remove(interactable);
-        physics_world.removeBody(interactable.getRigidbody().getBody());
+        physics_world.removeRigidbody(interactable.getRigidbody());
+    }
+    // #endregion
+
+    // #region CAMERA MANAGER
+    protected Camera main_camera = new Camera(0.1);
+
+    public Camera getMainCamera() {
+        return main_camera;
+    }
+
+    public void setMainCamera(Camera camera) {
+        main_camera = camera;
     }
     // #endregion
 

@@ -10,7 +10,7 @@ import business_game.game_engine.Sprite;
 public class Loader {
 
     static private String getSpritesPath(String name) {
-        return "src/main/java/business_game/sprites/" + name + ".png";
+        return "business-game/src/main/java/business_game/sprites/" + name + ".png";
     }
 
     public static Image loadImage(String name) {
@@ -19,7 +19,7 @@ public class Loader {
         try {
             image = new Image(new FileInputStream(path));
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Image not found: " + path);
         }
         return image;
     }

@@ -40,7 +40,6 @@ public class GameLoop {
 
     private void update() {
         double delta_time = getDeltaTime();
-
         updateable.update(delta_time);
     }
 

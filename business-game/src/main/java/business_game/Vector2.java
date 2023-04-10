@@ -57,6 +57,13 @@ public class Vector2 {
     // return new Vector2Int((int) x, (int) y);
     // }
 
+    public void rotate(double angle) {
+        double x = this.x;
+        double y = this.y;
+        this.x = x * Math.cos(angle) - y * Math.sin(angle);
+        this.y = x * Math.sin(angle) + y * Math.cos(angle);
+    }
+
     public Vector2 copy() {
         return new Vector2(x, y);
     }

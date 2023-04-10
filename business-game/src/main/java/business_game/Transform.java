@@ -6,9 +6,7 @@ public class Transform {
     private double angle;
     private Transform parent;
 
-    public Transform()
-
-    {
+    public Transform() {
         this(0, 0, 1, 0);
     }
 
@@ -161,6 +159,13 @@ public class Transform {
         if (parent == null)
             return out;
         return parent.worldToLocalAngle(out);
+    }
+
+    public void setTransform(Transform transform) {
+        position = transform.position;
+        scale = transform.scale;
+        angle = transform.angle;
+        parent = transform.parent;
     }
 
     public Transform copy() {

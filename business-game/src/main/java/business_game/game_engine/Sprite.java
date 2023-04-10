@@ -1,8 +1,7 @@
 package business_game.game_engine;
 
 import javafx.scene.image.Image;
-
-import business_game.game_engine.utils.Vector2Int;
+import business_game.Vector2Int;
 import business_game.game_engine.utils.Loader;
 
 public class Sprite {
