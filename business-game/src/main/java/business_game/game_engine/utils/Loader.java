@@ -5,7 +5,7 @@ import javafx.scene.image.Image;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 
-import business_game.game_engine.Sprite;
+import business_game.game_engine.gfx.Sprite;
 
 public class Loader {
 

@@ -1,6 +1,6 @@
 package business_game.game_engine.managers;
 
-import business_game.Updateable;
+import business_game.game_engine.interfaces.Updateable;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.util.Duration;

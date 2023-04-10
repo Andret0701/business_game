@@ -3,23 +3,23 @@ package business_game.game_engine;
 import java.util.HashMap;
 import java.util.List;
 
-import business_game.Updateable;
-import business_game.Vector2;
-import business_game.Vector2Int;
+import business_game.game_engine.entity.Camera;
+import business_game.game_engine.entity.Drawable;
+import business_game.game_engine.entity.Entity;
+import business_game.game_engine.entity.Interactable;
+import business_game.game_engine.interfaces.Updateable;
+import business_game.game_engine.managers.Draw;
 import business_game.game_engine.managers.GameLoop;
 import javafx.scene.paint.Color;
-
-import business_game.Entity;
-import business_game.Interactable;
-import business_game.PhysicsWorld;
-import business_game.Transform;
-import business_game.Drawable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 
-import business_game.Camera;
-import business_game.Draw;
+import business_game.game_engine.managers.Input;
+import business_game.game_engine.physics.PhysicsWorld;
+import business_game.game_engine.types.Transform;
+import business_game.game_engine.types.Vector2;
+import business_game.game_engine.types.Vector2Int;
 
 import java.util.Collections;
 
@@ -38,10 +38,12 @@ public class Game implements Updateable {
     // #endregion
 
     public final GameLoop game_loop;
+    public final Input input;
     private PhysicsWorld physics_world;
 
     public Game() {
         game_loop = new GameLoop(FPS, this);
+        input = new Input();
         physics_world = new PhysicsWorld();
     }
 
@@ -49,10 +51,14 @@ public class Game implements Updateable {
     @Override
     public void update(double delta_time) {
         setActive();
+        input.update();
+
         Draw.background(Color.BLACK);
 
         physics_world.update(delta_time);
         updateEntities(delta_time);
+        // sinus zoom
+        // main_camera.setZoom(3 + Math.sin(game_loop.getGameTime()) * 0.5);
         updateDrawables();
     }
 
@@ -74,9 +80,7 @@ public class Game implements Updateable {
             if (!drawable.isVisable())
                 continue;
 
-            Entity entity = (Entity) drawable; // this is bad - fix later
-
-            Transform transform = entity.getTransform();
+            Transform transform = drawable.getTransform();
             Vector2 position = transform.getPosition();
             double scale = transform.getScale();
             double angle = transform.getAngle();
@@ -155,7 +159,7 @@ public class Game implements Updateable {
     // #endregion
 
     // #region CAMERA MANAGER
-    protected Camera main_camera = new Camera(10);
+    protected Camera main_camera = new Camera(1);
 
     public Camera getMainCamera() {
         return main_camera;

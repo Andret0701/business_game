@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
-import business_game.Entity;
+import business_game.game_engine.entity.Entity;
 
 public class Scene implements Iterable<Entity> {
     protected String name;

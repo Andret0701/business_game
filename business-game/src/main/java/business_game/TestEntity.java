@@ -1,5 +1,11 @@
 package business_game;
 
+import business_game.game_engine.entity.Drawable;
+import business_game.game_engine.entity.Entity;
+import business_game.game_engine.entity.Interactable;
+import business_game.game_engine.managers.Draw;
+import business_game.game_engine.physics.CircleCollider;
+import business_game.game_engine.physics.Rigidbody;
 import javafx.scene.paint.Color;
 
 public class TestEntity extends Entity implements Interactable, Drawable {

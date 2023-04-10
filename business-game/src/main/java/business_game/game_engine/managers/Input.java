@@ -7,32 +7,40 @@ import javafx.scene.input.KeyEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import business_game.Vector2;
+import business_game.game_engine.types.Vector2;
 
 public class Input {
-
-    private static HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
-    private static HashMap<KeyCode, Boolean> down_keys = new HashMap<KeyCode, Boolean>();
-    private static HashMap<KeyCode, Boolean> up_keys = new HashMap<KeyCode, Boolean>();
-
-    private static ArrayList<KeyCode> pressed_keys = new ArrayList<KeyCode>();
-    private static ArrayList<KeyCode> removed_keys = new ArrayList<KeyCode>();
+    private static Canvas canvas;
 
     public static void init(Canvas canvas) {
-        canvas.setOnKeyPressed(Input::keyPressed);
-        canvas.setOnKeyReleased(Input::keyReleased);
-        canvas.setOnMouseMoved(Input::mouseMoved);
+        Input.canvas = canvas;
     }
 
-    public static void keyPressed(KeyEvent e) {
+    private HashMap<KeyCode, Boolean> keys = new HashMap<KeyCode, Boolean>();
+    private HashMap<KeyCode, Boolean> down_keys = new HashMap<KeyCode, Boolean>();
+    private HashMap<KeyCode, Boolean> up_keys = new HashMap<KeyCode, Boolean>();
+
+    private ArrayList<KeyCode> pressed_keys = new ArrayList<KeyCode>();
+    private ArrayList<KeyCode> removed_keys = new ArrayList<KeyCode>();
+
+    public Input() {
+        if (canvas == null)
+            throw new RuntimeException("Input not initialized");
+
+        canvas.setOnKeyPressed(this::keyPressed);
+        canvas.setOnKeyReleased(this::keyReleased);
+        canvas.setOnMouseMoved(this::mouseMoved);
+    }
+
+    public void keyPressed(KeyEvent e) {
         pressed_keys.add(e.getCode());
     }
 
-    public static void keyReleased(KeyEvent e) {
+    public void keyReleased(KeyEvent e) {
         removed_keys.add(e.getCode());
     }
 
-    public static void update() {
+    public void update() {
         down_keys.clear();
         up_keys.clear();
         for (KeyCode key : pressed_keys) {
@@ -49,34 +57,34 @@ public class Input {
         removed_keys.clear();
     }
 
-    public static boolean getKey(String key) {
+    public boolean getKey(String key) {
         key = key.toUpperCase();
         return keys.containsKey(KeyCode.valueOf(key));
     }
 
-    public static boolean getKey(KeyCode key) {
+    public boolean getKey(KeyCode key) {
         return keys.containsKey(key);
     }
 
-    public static boolean getKeyDown(String key) {
+    public boolean getKeyDown(String key) {
         key = key.toUpperCase();
         return down_keys.containsKey(KeyCode.valueOf(key));
     }
 
-    public static boolean getKeyDown(KeyCode key) {
+    public boolean getKeyDown(KeyCode key) {
         return down_keys.containsKey(key);
     }
 
-    public static boolean getKeyUp(String key) {
+    public boolean getKeyUp(String key) {
         key = key.toUpperCase();
         return up_keys.containsKey(KeyCode.valueOf(key));
     }
 
-    public static boolean getKeyUp(KeyCode key) {
+    public boolean getKeyUp(KeyCode key) {
         return up_keys.containsKey(key);
     }
 
-    public static Vector2 getInput() {
+    public Vector2 getInput() {
         Vector2 input = new Vector2(0, 0);
         if (getKey(KeyCode.W) || getKey(KeyCode.UP))
             input.y += 1;
@@ -94,14 +102,14 @@ public class Input {
         return input;
     }
 
-    private static Vector2 mouse = new Vector2(0, 0);
+    private Vector2 mouse = new Vector2(0, 0);
 
-    public static void mouseMoved(javafx.scene.input.MouseEvent e) {
+    public void mouseMoved(javafx.scene.input.MouseEvent e) {
         mouse.x = e.getX();
         mouse.y = e.getY();
     }
 
-    public static Vector2 getMouse() {
+    public Vector2 getMouse() {
         return mouse;
     }
 
