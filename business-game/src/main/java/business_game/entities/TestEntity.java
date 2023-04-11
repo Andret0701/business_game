@@ -2,15 +2,14 @@ package business_game.entities;
 
 import java.util.ArrayList;
 
-import org.dyn4j.geometry.Vector2;
-
-import business_game.game_engine.Game;
-import business_game.game_engine.entity.Drawable;
-import business_game.game_engine.entity.Entity;
-import business_game.game_engine.entity.Interactable;
-import business_game.game_engine.managers.Draw;
-import business_game.game_engine.physics.CircleCollider;
-import business_game.game_engine.physics.Rigidbody;
+import game_engine.Game;
+import game_engine.entity.Drawable;
+import game_engine.entity.Entity;
+import game_engine.entity.Interactable;
+import game_engine.managers.Draw;
+import game_engine.physics.CircleCollider;
+import game_engine.physics.Rigidbody;
+import game_engine.types.Vector2;
 import javafx.scene.paint.Color;
 
 public class TestEntity extends Entity implements Interactable, Drawable {
@@ -45,6 +44,7 @@ public class TestEntity extends Entity implements Interactable, Drawable {
 
     @Override
     public void draw(double x, double y, double angle, double scale) {
+        Draw.noStroke();
         Draw.fill(color);
         Draw.circle(x, y, scale * 5);
     }
@@ -77,7 +77,6 @@ public class TestEntity extends Entity implements Interactable, Drawable {
         rigidbody.setSimulated(false);
 
         transform.setParent(other.getTransform());
-
         Vector2 position = new Vector2((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
         Game.instance.create(new TestEntity(), position.x, position.y);
 

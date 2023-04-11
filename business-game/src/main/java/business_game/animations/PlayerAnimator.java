@@ -1,9 +1,9 @@
 package business_game.animations;
 
-import business_game.game_engine.gfx.Animation;
-import business_game.game_engine.gfx.AnimationManager;
-import business_game.game_engine.gfx.SpriteRenderer;
-import business_game.game_engine.types.Vector2Int;
+import game_engine.gfx.Animation;
+import game_engine.gfx.AnimationManager;
+import game_engine.gfx.SpriteRenderer;
+import game_engine.types.Vector2Int;
 
 public class PlayerAnimator extends AnimationManager {
     public PlayerAnimator(SpriteRenderer sprite_renderer) {

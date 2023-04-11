@@ -1,12 +1,14 @@
 package business_game;
 
-import business_game.game_engine.Game;
 import business_game.scenes.GrassLandScene;
+import game_engine.Game;
 
 public class BusinessGame extends Game {
     public BusinessGame() {
-        name = "Business Game";
+        super();
         addScene(new GrassLandScene());
         setScene("Grass Land");
+        setGravity(0, 0);
+        draw_colliders = true;
     }
 }

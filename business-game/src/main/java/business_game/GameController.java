@@ -1,13 +1,11 @@
 package business_game;
 
+import game_engine.Game;
+import game_engine.managers.Draw;
+import game_engine.managers.Input;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.layout.AnchorPane;
-import business_game.game_engine.Game;
-import business_game.game_engine.managers.Draw;
-import business_game.game_engine.managers.Input;
-import business_game.game_engine.entity.Entity;
-import business_game.game_engine.entity.Tilemap;
 
 public class GameController {
     @FXML
@@ -17,9 +15,6 @@ public class GameController {
 
     Game game;
 
-    Entity entity;
-    Tilemap tilemap;
-
     @FXML // this is called when the fxml file is loaded
     private void initialize() {
         canvas.widthProperty().bind(root.widthProperty());
@@ -28,12 +23,6 @@ public class GameController {
         Input.init(canvas);
 
         game = new BusinessGame();
-
-    }
-
-    public void resize() {
-        canvas.setHeight(canvas.getParent().getLayoutBounds().getHeight());
-        canvas.setWidth(canvas.getParent().getLayoutBounds().getWidth());
     }
 
 }

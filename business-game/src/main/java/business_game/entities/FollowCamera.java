@@ -1,11 +1,9 @@
 package business_game.entities;
 
-import java.util.Vector;
-
-import business_game.game_engine.Game;
-import business_game.game_engine.entity.Camera;
-import business_game.game_engine.entity.Entity;
-import business_game.game_engine.types.Vector2;
+import game_engine.Game;
+import game_engine.entity.Camera;
+import game_engine.entity.Entity;
+import game_engine.types.Vector2;
 
 public class FollowCamera extends Camera {
     private String tag_to_follow;

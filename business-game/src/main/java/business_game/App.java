@@ -8,13 +8,12 @@ import javafx.stage.Stage;
 
 import java.io.IOException;
 
-import business_game.game_engine.utils.Loader;
+import game_engine.utils.Loader;
 
 /**
  * JavaFX App
  */
 public class App extends Application {
-
     private static Scene scene;
 
     @Override

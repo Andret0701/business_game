@@ -1,20 +1,16 @@
 package business_game.entities;
 
 import business_game.animations.PlayerAnimator;
-import business_game.game_engine.Game;
-import business_game.game_engine.entity.Drawable;
-import business_game.game_engine.entity.Entity;
-import business_game.game_engine.entity.Interactable;
-import business_game.game_engine.gfx.Animation;
-import business_game.game_engine.gfx.AnimationManager;
-import business_game.game_engine.gfx.Sprite;
-import business_game.game_engine.gfx.SpriteRenderer;
-import business_game.game_engine.managers.Draw;
-import business_game.game_engine.physics.CircleCollider;
-import business_game.game_engine.physics.Rigidbody;
-import business_game.game_engine.types.Vector2;
-import business_game.game_engine.types.Vector2Int;
-import business_game.game_engine.utils.Loader;
+import game_engine.Game;
+import game_engine.entity.Drawable;
+import game_engine.entity.Entity;
+import game_engine.entity.Interactable;
+import game_engine.gfx.AnimationManager;
+import game_engine.gfx.SpriteRenderer;
+import game_engine.managers.Draw;
+import game_engine.physics.CircleCollider;
+import game_engine.physics.Rigidbody;
+import game_engine.types.Vector2;
 import javafx.scene.paint.Color;
 
 public class Player extends Entity implements Interactable, Drawable {
@@ -29,14 +25,15 @@ public class Player extends Entity implements Interactable, Drawable {
         rigidbody.setCanRotate(false);
         rigidbody.addCollider(new CircleCollider(2, 0, 1.1));
 
+        rigidbody.setDamping(0.95);
+
         sprite_renderer = new SpriteRenderer();
         animation_manager = new PlayerAnimator(sprite_renderer);
+
     }
 
     @Override
     public void draw(double x, double y, double angle, double scale) {
-        Draw.fill(Color.GREEN);
-        Draw.circle(x, y + 1.1 * scale, scale * 2);
         Draw.sprite(sprite_renderer, x, y, scale, angle);
     }
 
@@ -47,8 +44,6 @@ public class Player extends Entity implements Interactable, Drawable {
 
         velocity.mul(delta_time);
         rigidbody.addForce(velocity);
-
-        transform.setAngle(transform.getAngle() + delta_time);
 
         if (input.x > 0) {
             sprite_renderer.flip_x = false;
