@@ -7,6 +7,7 @@ import business_game.game_engine.entity.Interactable;
 import business_game.game_engine.types.Vector2;
 
 public class Rigidbody {
+    private boolean is_simulated = true;
     private boolean is_static = false;
     private boolean is_trigger = false;
     private double mass = 1.0;
@@ -34,6 +35,14 @@ public class Rigidbody {
 
     public boolean getTrigger() {
         return is_trigger;
+    }
+
+    public void setSimulated(boolean is_simulated) {
+        this.is_simulated = is_simulated;
+    }
+
+    public boolean getSimulated() {
+        return is_simulated;
     }
 
     public void setMass(double mass) {

@@ -12,4 +12,7 @@ public class SpriteRenderer {
         this.sprite = sprite;
     }
 
+    public SpriteRenderer() {
+    }
+
 }

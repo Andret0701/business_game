@@ -11,9 +11,9 @@ public class Transform {
     }
 
     public Transform(double x, double y, double scale, double angle) {
-        this.position = new Vector2(x, y);
-        this.scale = scale;
-        this.angle = angle;
+        setPosition(new Vector2(x, y));
+        setScale(scale);
+        setAngle(angle);
     }
 
     public Vector2 getPosition() {
@@ -28,10 +28,18 @@ public class Transform {
         if (parent != null)
             position = parent.worldToLocalPosition(position);
         this.position = position;
+        updateMatrices();
     }
 
     public void setLocalPosition(Vector2 position) {
         this.position = position;
+        updateMatrices();
+    }
+
+    public void translate(Vector2 offset) {
+        Vector2 position = getPosition();
+        position.add(offset);
+        setPosition(position);
     }
 
     public double getScale() {
@@ -46,10 +54,16 @@ public class Transform {
         if (parent != null)
             scale = parent.worldToLocalScale(scale);
         this.scale = scale;
+        updateMatrices();
     }
 
     public void setLocalScale(double scale) {
         this.scale = scale;
+        updateMatrices();
+    }
+
+    public void scale(double scale) {
+        setScale(getScale() * scale);
     }
 
     public double getAngle() {
@@ -60,14 +74,20 @@ public class Transform {
         return angle;
     }
 
+    public void rotate(double angle) {
+        setAngle(getAngle() + angle);
+    }
+
     public void setAngle(double angle) {
         if (parent != null)
             angle = parent.worldToLocalAngle(angle);
         this.angle = angle;
+        updateMatrices();
     }
 
     public void setLocalAngle(double angle) {
         this.angle = angle;
+        updateMatrices();
     }
 
     public Transform getParent() {
@@ -75,7 +95,13 @@ public class Transform {
     }
 
     public void setParent(Transform parent) {
+        Vector2 position = getPosition();
+        double scale = getScale();
+        double angle = getAngle();
         this.parent = parent;
+        setPosition(position);
+        setScale(scale);
+        setAngle(angle);
     }
 
     private double[] matrix33vector3(double[][] matrix, double[] vector) {
@@ -89,23 +115,31 @@ public class Transform {
         return result;
     }
 
-    private double[][] get_transform_matrix(double x, double y, double scale, double angle) {
-        double cosa = Math.cos(angle);
+    private double transform_matrix[][];
+    private double inverse_transform_matrix[][];
+
+    private void updateMatrices() {
+        transform_matrix = getTransformMatrix();
+        inverse_transform_matrix = GetInverseTransformMatrix();
+    }
+
+    private double[][] getTransformMatrix() {
         double sina = Math.sin(angle);
+        double cosa = Math.cos(angle);
         double[][] matrix = new double[][] {
-                { cosa * scale, -sina * scale, x },
-                { sina * scale, cosa * scale, y },
+                { cosa * scale, -sina * scale, position.x },
+                { sina * scale, cosa * scale, position.y },
                 { 0, 0, 1 }
         };
         return matrix;
     }
 
-    private double[][] get_inverse_transform_matrix(double x, double y, double scale, double angle) {
-        double cosa = Math.cos(angle);
+    private double[][] GetInverseTransformMatrix() {
         double sina = Math.sin(angle);
+        double cosa = Math.cos(angle);
         double[][] matrix = new double[][] {
-                { cosa / scale, sina / scale, -x * cosa / scale - y * sina / scale },
-                { -sina / scale, cosa / scale, x * sina / scale - y * cosa / scale },
+                { cosa / scale, sina / scale, -position.x * cosa / scale - position.y * sina / scale },
+                { -sina / scale, cosa / scale, position.x * sina / scale - position.y * cosa / scale },
                 { 0, 0, 1 }
         };
         return matrix;
@@ -113,15 +147,13 @@ public class Transform {
 
     public Vector2 transform(Vector2 point) {
         double[] vector = new double[] { point.x, point.y, 1 };
-        double[][] matrix = get_transform_matrix(position.x, position.y, scale, angle);
-        double[] result = matrix33vector3(matrix, vector);
+        double[] result = matrix33vector3(transform_matrix, vector);
         return new Vector2(result[0], result[1]);
     }
 
     public Vector2 inverseTransform(Vector2 point) {
         double[] vector = new double[] { point.x, point.y, 1 };
-        double[][] matrix = get_inverse_transform_matrix(position.x, position.y, scale, angle);
-        double[] result = matrix33vector3(matrix, vector);
+        double[] result = matrix33vector3(inverse_transform_matrix, vector);
         return new Vector2(result[0], result[1]);
     }
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 import java.util.Iterator;
 
 import business_game.game_engine.entity.Entity;
+import business_game.game_engine.types.Vector2;
 
 public class Scene implements Iterable<Entity> {
     protected String name;
@@ -20,6 +21,11 @@ public class Scene implements Iterable<Entity> {
     private Collection<Entity> entities = new ArrayList<>();
 
     protected void add(Entity entity) {
+        entities.add(entity);
+    }
+
+    protected void add(Entity entity, double x, double y) {
+        entity.getTransform().setPosition(new Vector2(x, y));
         entities.add(entity);
     }
 

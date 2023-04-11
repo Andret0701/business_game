@@ -41,6 +41,7 @@ public class Input {
     }
 
     public void update() {
+        canvas.requestFocus();
         down_keys.clear();
         up_keys.clear();
         for (KeyCode key : pressed_keys) {

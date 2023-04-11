@@ -60,14 +60,20 @@ public class PhysicsWorld implements Updateable {
 
     @Override
     public void update(double delta_time) {
-        for (Rigidbody rigidbody : bodies.keySet())
-            syncBody(rigidbody, bodies.get(rigidbody));
+        for (Rigidbody rigidbody : bodies.keySet()) {
+            if (rigidbody.getSimulated())
+                syncBody(rigidbody, bodies.get(rigidbody));
+        }
 
         world.setGravity(new org.dyn4j.geometry.Vector2(gravity.x, gravity.y));
-        world.update(delta_time);
+        int n = 1;
+        for (int i = 0; i < n; i++)
+            world.update(delta_time / n);
 
-        for (Rigidbody rigidbody : bodies.keySet())
-            syncRigidbody(rigidbody, bodies.get(rigidbody));
+        for (Rigidbody rigidbody : bodies.keySet()) {
+            if (rigidbody.getSimulated())
+                syncRigidbody(rigidbody, bodies.get(rigidbody));
+        }
     }
 
     private HashMap<Rigidbody, Body> bodies = new HashMap<Rigidbody, Body>();
@@ -94,6 +100,7 @@ public class PhysicsWorld implements Updateable {
             body.addFixture(convex);
         }
 
+        body.setUserData(rigidbody.getSimulated());
         body.setUserData(rigidbody);
         return body;
     }
@@ -115,6 +122,8 @@ public class PhysicsWorld implements Updateable {
     }
 
     private void syncRigidbody(Rigidbody rigidbody, Body body) {
+        if (rigidbody.getStatic())
+            return;
         org.dyn4j.geometry.Transform transform = body.getTransform();
         Vector2 position = new Vector2(transform.getTranslationX(), transform.getTranslationY());
         double angle = transform.getRotationAngle();

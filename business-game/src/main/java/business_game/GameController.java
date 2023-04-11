@@ -8,7 +8,6 @@ import business_game.game_engine.managers.Draw;
 import business_game.game_engine.managers.Input;
 import business_game.game_engine.entity.Entity;
 import business_game.game_engine.entity.Tilemap;
-import business_game.game_engine.utils.Loader;
 
 public class GameController {
     @FXML
@@ -28,15 +27,8 @@ public class GameController {
         Draw.init(canvas);
         Input.init(canvas);
 
-        game = new Game();
-        // entity = game.create(new TestEntity(), 0.4, 0);
-        tilemap = (Tilemap) game.create(new Tilemap(20, 20), 0, 0);
-        tilemap.fill(Loader.loadSprite("Tiles/Grass", 0, 0));
+        game = new BusinessGame();
 
-        // debug
-        // System.out.println(entity);
-
-        // ((Interactable) entity).getRigidbody().setStatic(true);
     }
 
     public void resize() {

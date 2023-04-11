@@ -64,6 +64,10 @@ public class Vector2 {
         this.y = x * Math.sin(angle) + y * Math.cos(angle);
     }
 
+    public double dist(Vector2 other) {
+        return Math.sqrt(Math.pow(x - other.x, 2) + Math.pow(y - other.y, 2));
+    }
+
     public Vector2 copy() {
         return new Vector2(x, y);
     }

@@ -31,10 +31,10 @@ public class Game implements Updateable {
     }
 
     // #region GAME SETTINGS
-    public final String name = "Game";
-    public final Vector2Int screen_size = new Vector2Int(800, 600);
-    public final boolean is_resizable = true;
-    public final int FPS = 60;
+    public String name = "Game";
+    public Vector2Int screen_size = new Vector2Int(800, 600);
+    public boolean is_resizable = true;
+    public int FPS = 60;
     // #endregion
 
     public final GameLoop game_loop;
@@ -47,6 +47,8 @@ public class Game implements Updateable {
         physics_world = new PhysicsWorld();
     }
 
+    private double current_fps = 0;
+
     // #region UPDATE MANAGER
     @Override
     public void update(double delta_time) {
@@ -57,9 +59,13 @@ public class Game implements Updateable {
 
         physics_world.update(delta_time);
         updateEntities(delta_time);
-        // sinus zoom
-        // main_camera.setZoom(3 + Math.sin(game_loop.getGameTime()) * 0.5);
         updateDrawables();
+
+        int n = 4;
+        current_fps = current_fps * ((double) (n - 1) / (double) n) + (1 / delta_time) * ((double) (1)
+                / (double) n);
+        System.out.println("FPS: " + ((int) current_fps) + " | Entities: " + entities.size() + " | Drawables: "
+                + drawEntities.size());
     }
 
     public void updateEntities(double delta_time) {
@@ -106,10 +112,18 @@ public class Game implements Updateable {
         if (!scenes.containsKey(scene_name))
             throw new IllegalArgumentException("Scene " + scene_name + " does not exist");
         destroyAll();
-        for (Entity entity : scenes.get(scene_name)) {
+
+        Scene scene = scenes.get(scene_name);
+        boolean created_camera = false;
+        for (Entity entity : scene) {
             Vector2 position = entity.getTransform().getPosition();
-            create(entity, position.x, position.y);
+            Entity created = create(entity, position.x, position.y);
+            if (created_camera == false && entity instanceof Camera) {
+                setMainCamera((Camera) created);
+                created_camera = true;
+            }
         }
+
     }
     // #endregion
 
@@ -159,7 +173,7 @@ public class Game implements Updateable {
     // #endregion
 
     // #region CAMERA MANAGER
-    protected Camera main_camera = new Camera(1);
+    protected Camera main_camera = new Camera(10);
 
     public Camera getMainCamera() {
         return main_camera;
@@ -170,4 +184,21 @@ public class Game implements Updateable {
     }
     // #endregion
 
+    // #region TAG MANAGER
+    public List<Entity> getEntitiesWithTag(String tag) {
+        List<Entity> entitiesWithTag = new ArrayList<>();
+        for (Entity entity : entities)
+            if (entity.hasTag(tag))
+                entitiesWithTag.add(entity);
+        return entitiesWithTag;
+    }
+
+    public Entity getEntityWithTag(String tag) {
+        for (Entity entity : entities)
+            if (entity.hasTag(tag))
+                return entity;
+        return null;
+    }
+
+    // #endregion
 }

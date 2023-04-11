@@ -88,7 +88,7 @@ public class Draw {
 
         radius *= 2;
 
-        translateCanvas(x, y, -radius / 2, -radius / 2, 0);
+        translateCanvas(position.x, position.y, -radius / 2, -radius / 2, 0);
         canvas.fillOval(0, 0, radius, radius);
         Draw.canvas.restore();
     }
@@ -116,23 +116,26 @@ public class Draw {
     }
 
     public static void sprite(SpriteRenderer sprite_renderer, double x, double y, double scale, double angle) {
+        if (sprite_renderer == null || sprite_renderer.sprite == null)
+            return;
         sprite(sprite_renderer.sprite, x, y, sprite_renderer.flip_x, sprite_renderer.flip_y, scale, angle);
     }
 
     public static void sprite(Sprite sprite, double x, double y, boolean flip_x, boolean flip_y, double scale,
             double angle) {
-        int flip_x_int = flip_x ? 1 : -1; // because of the way the image is drawn
-        int flip_y_int = flip_y ? -1 : 1;
+        scale *= pixel_size;
+        int flip_x_int = flip_x ? -1 : 1; // because of the way the image is drawn
+        int flip_y_int = flip_y ? 1 : -1;
 
-        double offset_x = sprite.offset.x * pixel_size * flip_x_int;
-        double offset_y = sprite.offset.y * pixel_size * flip_y_int;
+        double offset_x = sprite.offset.x * scale * flip_x_int;
+        double offset_y = sprite.offset.y * scale * flip_y_int;
 
         Vector2 position = new Vector2(x, y);
 
         Image image = sprite.getImage();
 
-        double width = pixel_size * image.getWidth() * flip_x_int * scale;
-        double height = pixel_size * image.getHeight() * flip_y_int * scale;
+        double width = image.getWidth() * flip_x_int * scale;
+        double height = image.getHeight() * flip_y_int * scale;
 
         translateCanvas(position.x, position.y, offset_x, offset_y, angle);
         canvas.setImageSmoothing(false);
