@@ -1,0 +1,5 @@
+double testDouble = 1.0
+int testInt = 1
+string testString = test
+boolean testBoolean = true
+vector testVector = 1.0, 1.0

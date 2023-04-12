@@ -13,7 +13,7 @@ public class FileHandler {
 
         try (FileWriter writer = new FileWriter(file)) {
             for (String string : strings)
-                writer.write(string);
+                writer.write(string + "\n");
         } catch (IOException e) {
             System.out.println("Error writing to file: " + e.getMessage());
         }
@@ -29,8 +29,10 @@ public class FileHandler {
 
         try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
             String line;
-            while ((line = reader.readLine()) != null)
-                strings.add(line);
+            while ((line = reader.readLine()) != null) {
+                String trimmed = line.trim();
+                strings.add(trimmed);
+            }
         } catch (IOException e) {
             System.out.println("Error reading from file: " + e.getMessage());
         }

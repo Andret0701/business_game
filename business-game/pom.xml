@@ -32,6 +32,13 @@
             <artifactId>ejml-all</artifactId>
             <version>0.38</version>
         </dependency>
+
+        <!-- JUnit 5 -->
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter-engine</artifactId>
+			<version>5.7.0</version>
+		</dependency>
     </dependencies>
     
     <build>
