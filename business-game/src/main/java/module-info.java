@@ -7,4 +7,5 @@ module business_game {
     opens business_game to javafx.fxml;
 
     exports business_game;
+    exports game_engine;
 }

@@ -34,4 +34,8 @@ public class Scene implements Iterable<Entity> {
         return entities.iterator();
     }
 
+    public void loadContent() {
+        entities.clear();
+    }
+
 }

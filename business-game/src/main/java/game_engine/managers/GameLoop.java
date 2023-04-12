@@ -6,15 +6,14 @@ import javafx.animation.Timeline;
 import javafx.util.Duration;
 
 public class GameLoop {
+    private int FPS;
     private Updateable updateable;
     private long timer_start;
     private long last_frame;
 
     public GameLoop(int FPS, Updateable updateable) {
         this.updateable = updateable;
-        timer_start = System.currentTimeMillis();
-        last_frame = System.nanoTime();
-        setupGameLoop(FPS, this::update);
+        this.FPS = FPS;
     }
 
     private void setupGameLoop(int FPS, Runnable updateFunction) {
@@ -24,6 +23,17 @@ public class GameLoop {
         gameLoop.setCycleCount(Timeline.INDEFINITE);
         gameLoop.getKeyFrames().add(frame);
         gameLoop.play();
+    }
+
+    private boolean running = false;
+
+    public void start() {
+        if (running)
+            return;
+        timer_start = System.currentTimeMillis();
+        last_frame = System.nanoTime();
+        setupGameLoop(FPS, this::update);
+        running = true;
     }
 
     public double getGameTime() {

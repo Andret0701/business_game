@@ -39,4 +39,9 @@ public class App extends Application {
         launch();
     }
 
+    @Override
+    public void stop() {
+        GameController.game.save("save.txt");
+    }
+
 }

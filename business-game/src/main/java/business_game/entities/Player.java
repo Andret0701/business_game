@@ -7,11 +7,11 @@ import game_engine.entity.Entity;
 import game_engine.entity.Interactable;
 import game_engine.gfx.AnimationManager;
 import game_engine.gfx.SpriteRenderer;
+import game_engine.managers.DataSaver;
 import game_engine.managers.Draw;
 import game_engine.physics.CircleCollider;
 import game_engine.physics.Rigidbody;
 import game_engine.types.Vector2;
-import javafx.scene.paint.Color;
 
 public class Player extends Entity implements Interactable, Drawable {
     private Rigidbody rigidbody;
@@ -29,7 +29,6 @@ public class Player extends Entity implements Interactable, Drawable {
 
         sprite_renderer = new SpriteRenderer();
         animation_manager = new PlayerAnimator(sprite_renderer);
-
     }
 
     @Override
@@ -39,6 +38,7 @@ public class Player extends Entity implements Interactable, Drawable {
 
     @Override
     public void update(double delta_time) {
+
         Vector2 input = Game.instance.input.getInput();
         Vector2 velocity = new Vector2(input.x * 100, input.y * 100);
 
@@ -57,6 +57,8 @@ public class Player extends Entity implements Interactable, Drawable {
             animation_manager.play("idle");
         }
         animation_manager.update(delta_time);
+
+        DataSaver.setVector("player_position", transform.getPosition());
     }
 
     @Override

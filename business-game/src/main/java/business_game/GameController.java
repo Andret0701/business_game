@@ -13,7 +13,7 @@ public class GameController {
     @FXML
     private AnchorPane root;
 
-    Game game;
+    public static Game game; // this is bad
 
     @FXML // this is called when the fxml file is loaded
     private void initialize() {
@@ -23,6 +23,9 @@ public class GameController {
         Input.init(canvas);
 
         game = new BusinessGame();
+        game.load("save.txt");
+
+        game.start();
     }
 
 }

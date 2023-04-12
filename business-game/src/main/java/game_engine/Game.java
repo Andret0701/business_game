@@ -8,6 +8,7 @@ import game_engine.entity.Drawable;
 import game_engine.entity.Entity;
 import game_engine.entity.Interactable;
 import game_engine.interfaces.Updateable;
+import game_engine.managers.DataSaver;
 import game_engine.managers.Draw;
 import game_engine.managers.GameLoop;
 import game_engine.managers.Input;
@@ -31,7 +32,8 @@ public class Game implements Updateable {
     public int FPS = 60;
     public final GameLoop game_loop;
     public final Input input;
-    private PhysicsWorld physics_world;
+    private final PhysicsWorld physics_world;
+    private final DataSaver data_saver = new DataSaver();
 
     public Game() {
         game_loop = new GameLoop(FPS, this);
@@ -39,11 +41,18 @@ public class Game implements Updateable {
         physics_world = new PhysicsWorld();
     }
 
+    public void start() {
+        game_loop.start();
+    }
+
     // #region UPDATE MANAGER
     @Override
     public void update(double delta_time) {
         setActive();
+        data_saver.setActive();
         input.update();
+
+        loadScene();
 
         Draw.background(Color.BLACK);
 
@@ -90,6 +99,7 @@ public class Game implements Updateable {
 
     // #region SCENE MANAGER
     protected HashMap<String, Scene> scenes = new HashMap<String, Scene>();
+    private String scene_to_load = null;
 
     public void addScene(Scene scene) {
         scenes.put(scene.name, scene);
@@ -98,9 +108,20 @@ public class Game implements Updateable {
     public void setScene(String scene_name) {
         if (!scenes.containsKey(scene_name))
             throw new IllegalArgumentException("Scene " + scene_name + " does not exist");
+        scene_to_load = scene_name;
+    }
+
+    /**
+     * 
+     */
+    private void loadScene() {
+        if (scene_to_load == null)
+            return;
+
+        Scene scene = scenes.get(scene_to_load);
+        scene.loadContent();
         destroyAll();
 
-        Scene scene = scenes.get(scene_name);
         boolean created_camera = false;
         for (Entity entity : scene) {
             Vector2 position = entity.getTransform().getPosition();
@@ -110,7 +131,7 @@ public class Game implements Updateable {
                 created_camera = true;
             }
         }
-
+        scene_to_load = null;
     }
     // #endregion
 
@@ -216,4 +237,17 @@ public class Game implements Updateable {
 
     }
     // #endregion
+
+    // #region DATA SAVER
+    public void save(String path) {
+        data_saver.setActive();
+        DataSaver.save(path);
+    }
+
+    public void load(String path) {
+        data_saver.setActive();
+        DataSaver.load(path);
+    }
+    // #endregion
+
 }
