@@ -9,6 +9,6 @@ public class BusinessGame extends Game {
         addScene(new GrassLandScene());
         setScene("Grass Land");
         setGravity(0, 0);
-        draw_colliders = true;
+        draw_colliders = false;
     }
 }

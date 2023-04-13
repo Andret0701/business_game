@@ -1,6 +1,7 @@
 package game_engine;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import game_engine.entity.Camera;
@@ -65,8 +66,13 @@ public class Game implements Updateable {
     }
 
     public void updateEntities(double delta_time) {
-        for (Entity entity : entities)
+        List<Entity> entitiesCopy = new ArrayList<>(entities); // make a copy of the entities list
+        for (Entity entity : entitiesCopy) { // iterate over the copy instead of the original list
+            if (entity == null) {
+                throw new NullPointerException("Entity is null");
+            }
             entity.update(delta_time);
+        }
     }
 
     Comparator<Drawable> drawableComparator = new Comparator<Drawable>() {

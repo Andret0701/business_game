@@ -26,5 +26,6 @@ public class CircleCollider extends Collider {
         Draw.stroke(Color.LIGHTGREEN);
         Draw.strokeWeight(1); // scale?
         Draw.circle(x, y, radius * scale);
+        Draw.line(x, y, x + scale * radius, y);
     }
 }

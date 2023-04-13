@@ -110,6 +110,12 @@ public class Draw {
         Draw.canvas.restore();
     }
 
+    public static void line(double x1, double y1, double x2, double y2) {
+        translateCanvas(x1, y1, 0, 0, 0);
+        Draw.canvas.strokeLine(0, 0, x2 - x1, y2 - y1);
+        Draw.canvas.restore();
+    }
+
     private static double pixel_size = 1;
 
     public static void setPixelSize(double pixel_size) {

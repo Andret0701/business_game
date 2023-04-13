@@ -18,17 +18,17 @@ public class TestEntity extends Entity implements Interactable, Drawable {
     private Color color;
     private final ArrayList<Color> colors = new ArrayList<Color>() {
         {
-            add(Color.RED);
-            add(Color.GREEN);
-            add(Color.BLUE);
-            add(Color.YELLOW);
+            // add(Color.RED);
+            add(Color.LIGHTGREEN);
+            add(Color.LIGHTBLUE);
+            // add(Color.YELLOW);
             add(Color.PURPLE);
             add(Color.ORANGE);
             add(Color.CYAN);
-            add(Color.PINK);
-            add(Color.BROWN);
-            add(Color.BLACK);
-            add(Color.WHITE);
+            // add(Color.PINK);
+            // add(Color.BROWN);
+            // add(Color.BLACK);
+            // add(Color.WHITE);
         }
     };
 
@@ -64,13 +64,50 @@ public class TestEntity extends Entity implements Interactable, Drawable {
         return rigidbody;
     }
 
+    private double time = 0;
+    private int state = 0;
+    private Vector2 dir;
+
     @Override
     public void update(double delta_time) {
+        double distance_from_center = transform.getPosition().length();
+        if (distance_from_center > 100) {
+            Game.instance.destroy(this);
+            return;
+        }
+
+        if (state == 1) {
+
+            Vector2 local_position = transform.getLocalPositon();
+            local_position.rotate(delta_time * 2);
+            local_position.normalize();
+            local_position.mul(Math.sin(time * 3.1) * 1
+                    + Math.sin(Game.instance.game_loop.getGameTime() * 2) * 5 + 11);
+            transform.setLocalPosition(local_position);
+
+            if (Game.instance.input.getKeyDown("space")) {
+                dir = transform.getLocalPositon();
+                dir.normalize();
+                transform.setParent(null);
+                state = 2;
+            }
+        } else if (state == 2) {
+            Vector2 _dir = dir.copy();
+            _dir.rotate(transform.getAngle());
+            _dir.mul(delta_time * 50);
+            transform.translate(_dir);
+        }
+
+        time += delta_time;
 
     }
 
     @Override
     public void onCollision(Interactable other) {
+        if (state != 0) {
+            return;
+        }
+
         if (transform.getParent() != null)
             return;
 
@@ -79,6 +116,7 @@ public class TestEntity extends Entity implements Interactable, Drawable {
         transform.setParent(other.getTransform());
         Vector2 position = new Vector2((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
         Game.instance.create(new TestEntity(), position.x, position.y);
+        state = 1;
 
     }
 
