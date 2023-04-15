@@ -68,9 +68,8 @@ public class Game implements Updateable {
     public void updateEntities(double delta_time) {
         List<Entity> entitiesCopy = new ArrayList<>(entities); // make a copy of the entities list
         for (Entity entity : entitiesCopy) { // iterate over the copy instead of the original list
-            if (entity == null) {
-                throw new NullPointerException("Entity is null");
-            }
+            if (entity == null)
+                continue;
             entity.update(delta_time);
         }
     }

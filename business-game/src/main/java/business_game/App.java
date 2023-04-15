@@ -7,6 +7,7 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 
 import game_engine.utils.Loader;
 
@@ -39,9 +40,16 @@ public class App extends Application {
         launch();
     }
 
+    private static ArrayList<EventInterface> stop_event = new ArrayList<EventInterface>();
+
+    public static void addStopEvent(EventInterface event) {
+        stop_event.add(event);
+    }
+
     @Override
     public void stop() {
-        GameController.game.save("save.txt");
+        for (EventInterface event : stop_event)
+            event.onEvent();
     }
 
 }

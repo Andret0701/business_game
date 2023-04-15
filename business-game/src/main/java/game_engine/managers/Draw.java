@@ -173,16 +173,18 @@ public class Draw {
 
         for (int x = 0; x < tilemap.length; x++) {
             for (int y = 0; y < tilemap[x].length; y++) {
+
+                Tile tile = tilemap[x][y];
+                if (tile == null || tile.sprite == null)
+                    continue;
                 Sprite sprite = tilemap[x][y].sprite;
 
-                if (sprite == null)
-                    continue;
-
                 Vector2 tile_position = new Vector2(x, y);
+                tile_position.sub(new Vector2(tilemap.length / 2.0, tilemap[x].length / 2.0));
                 tile_position.mul(new Vector2(size.x * scale, size.y * scale));
-                tile_position.add(new Vector2(size.x * scale, 0));
-                tile_position.sub(offset);
+                tile_position.add(new Vector2(0, size.y * scale));
                 tile_position.rotate(angle);
+
                 tile_position.add(position);
 
                 sprite(sprite, tile_position.x, tile_position.y, false, false, scale, angle);

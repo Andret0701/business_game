@@ -27,7 +27,7 @@ public class GrassLandScene extends Scene {
             while (position.dist(player.getTransform().getPosition()) < 20) {
                 position = new Vector2((Math.random() - 0.5) * 100, (Math.random() - 0.5) * 100);
             }
-            add(new TestEntity(), position.x, position.y);
+            // add(new TestEntity(), position.x, position.y);
         }
 
         FollowCamera camera = new FollowCamera(4, 2, "Player");
